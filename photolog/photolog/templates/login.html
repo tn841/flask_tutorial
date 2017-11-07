@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Login{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <h2>Login page</h2><hr>
+    {% if session['user_info'] %}
+        {{ session['user_info'] }}님 반갑습니다. <a href="/logout">로그아웃</a>
+    {% elif not form  %}
+        <a href="/login">로그인</a>
+    {% endif %}
+
+    {% from "_formhelper.html" import render_field %}
+    <form name="frm" method="POST" action="{{ url_for('photolog.login_form_page') }}" onsubmit="return checkLogin(this)">
+        <div class="login_form_head">
+            {% if error %}
+                {{error}}
+            {%endif%}
+            {% if regist_user %}
+                {{ regist_user }} 님 가입을 환영합니다. 가입한 정보로 로그인 하세요.
+            {% endif %}
+            {% if msg %}
+                {{ msg }}
+            {% endif %}
+        </div>
+        <div class="login_form_body">
+            {% if form %}
+                {{ render_field(form.username, placeholder="username") }}
+                {{ render_field(form.password, placeholder="password") }}
+                <input type="submit"/>
+                <input type="button" id="register_btn" value="가입"/>
+            {% endif %}
+        </div>
+    </form>
+
+    <script>
+        $(function(){
+            $('#register_btn').on('click', function(){
+                console.log("asdf");
+                location.href = '/register';
+            });
+        });
+
+    </script>
+{% endblock %}

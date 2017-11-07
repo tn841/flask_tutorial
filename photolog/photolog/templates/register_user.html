@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %} Regist {% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+    <h2>사용자 등록 페이지</h2> <hr>
+    {% from "_formhelper.html" import render_field %}
+    <form method="POST" action="{{ url_for('photolog.register_action') }}"  >
+        <div>
+            {% if error %}
+                <p style="color:red">{{error}}</p>
+            {%  endif %}
+        </div>
+        <div>
+            {{ render_field(form.username, placeholder="username") }}<br>
+            {{ render_field(form.email, placeholder="email") }}<br>
+            {{ render_field(form.password, placeholder="password") }}<br>
+            {{ render_field(form.pass_confirm, placeholder="password") }}<br>
+            {{ render_field(form.submit) }}<br>
+        </div>
+
+    </form>
+{% endblock %}}

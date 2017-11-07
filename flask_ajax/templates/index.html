@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>flask ajax</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<body>
+    <script>
+        $(function(){
+            $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+            $('a#calculate').bind('click', function(){
+               $.getJSON($SCRIPT_ROOT + '/_add', {
+                   a: $('input[name="a"]').val(),
+                   b: $('input[name="b"]').val()
+               }, function(data){
+                   $("#result").text(data.result);
+               });
+               return false
+            });
+        });
+    </script>
+
+    <h1>jQuery Example</h1>
+    <input type="text" size="5" name="a"/> + <input type="text" size="5" name="b"/> = <span id="result">?</span>
+    <p><a href="#" id="calculate">calculate server side</a> </p>
+
+</body>
+</html>

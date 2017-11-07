@@ -1,0 +1,4 @@
+{
+    "DB_URL": "mysql+pymysql://root:rootroot@localhost/test"
+}
+

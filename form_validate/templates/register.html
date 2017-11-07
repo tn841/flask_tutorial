@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+<form method="POST" action="/register">
+{% for field in form %}
+<tr>
+    <th>{{ field.label }}</th>
+    <td>{{ field }}</td>
+</tr>
+{% endfor %}
+</form>
+</body>
+</html>

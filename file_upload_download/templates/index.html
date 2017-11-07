@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Download</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<body>
+<h1>upload and download</h1><hr>
+    <a href="#" id="down">다운 받기</a>
+    <a href="/download?filename=test.txt" >다운 받기2</a>
+    <script>
+        $(function(){
+            $('#down').on('click', function(){
+                $.ajax({
+                    url:'/download?filename=test.txt',
+                    method:'GET',
+                    success:function(data){
+                        alert(data);
+                    }
+                });
+            });
+        })
+    </script>
+</body>
+</html>
