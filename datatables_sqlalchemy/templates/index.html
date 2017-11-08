@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Datatables with sqlalchemy</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+    <h1>Datatables with sqlalchemy</h1><hr>
+    <a href="#" id="a_btn">get data</a>
+    <div id="render_data"></div>
+
+    <a href="#" id="b_btn">render datatables</a>
+    <div id="render_table">
+        <table class="table" id="book_list">
+            <thead>
+                <tr>
+                    <th>book id</th>
+                    <th>book name</th>
+                    <th>book price</th>
+                    <th>book type</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(function(){
+            $('#a_btn').on('click',function(){
+                $.ajax({
+                    url:'/datatables/get_data',
+                    method:'POST',
+                    success:function(data){
+                        $('#render_data').text(data.key_data);
+                    }
+                });
+            });//a_btn
+
+            $('#b_btn').on('click',function(){
+               $('#book_list').dataTable({
+                    serverSide: true,
+                    processing: true,
+                    ajax: {
+                        "url" : "/datatables/get_table_data"
+                    }
+                });
+
+               /*$.ajax({
+                   url:"/datatables/get_table_data",
+                   method:"POST",
+                   success:function(data){
+                       console.log(data)
+                   }
+               });*/
+            });//b_btn
+        })
+    </script>
+
+</body>
+</html>
