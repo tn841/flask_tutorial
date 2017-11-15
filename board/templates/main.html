@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+{% block title %} index {% endblock %}
+{% block head %} {{super()}} {% endblock %}
+{% block body %}
+{% if msg %}
+    <h3>{{msg}}</h3><hr>
+{% endif %}
+<h1>index page</h1><hr>
+{% if current_user.is_authenticated %}
+    <p>{{ current_user['user_id'] }}님 반갑습니다.</p>
+{% endif %}
+{% endblock %}

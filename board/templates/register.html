@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+{% block title %}register{% endblock %}
+{% block head %}
+{{super()}}
+{% endblock %}
+{% block body %}
+<h1>사용자 등록 form</h1><hr>
+<form action="api/register" method="POST">
+    <label>ID : </label><input type="text" name="id" size="10" placeholder="ID"/><br>
+    <label>이름 : </label><input type="text" name="name" size="10" placeholder="이름"/><br>
+    <label>email : </label><input type="text" name="email" size="10" placeholder="email"/><br>
+    <label>pw : </label><input type="password" name="pw" size="10" placeholder="pw"/><br>
+    <label>pw 확인 : </label><input type="password" name="pw_check" size="10" placeholder="pw 확인"/><br>
+    <input type="submit">
+</form>
+{% endblock %}

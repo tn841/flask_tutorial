@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} {% endblock %}</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    {% block head %}
+    {% endblock %}
+</head>
+<body>
+<div>
+    <a href="main">메인</a>
+    | <a href={{ url_for("board_view.common_board") }}>자유 게시판</a>
+    {% if current_user.is_authenticated %}
+    | <a href={{ url_for("board_view.member_board") }}>회원 게시판</a>
+    {% endif %}
+
+    <span style="float:right">
+    {% if current_user.is_authenticated %}
+        {{ current_user['user_id'] }}님 <a href="/api/logout">로그아웃</a>
+    {% else %}
+        <a href="/login">로그인</a>
+    {% endif %}
+    </span>
+    <hr>
+
+</div>
+<div>
+    {% block body %}{% endblock %}
+
+    {% with list = get_flashed_messages() %}
+    {% if list %}
+    {% for msg in list %}
+    <h3>{{ msg.decode('utf-8') }}</h3>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+</div>
+
+</body>
+</html>
