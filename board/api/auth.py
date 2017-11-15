@@ -5,7 +5,7 @@ from flask.helpers import flash, url_for
 from flask.templating import render_template
 from flask_login.login_manager import LoginManager
 from board_base import app
-from flask_login.utils import login_user, logout_user, current_user, login_required
+from flask_login.utils import login_user, logout_user, current_user, login_required, login_fresh
 from mylogger import logger
 from db.user import User
 from werkzeug.utils import redirect
@@ -21,29 +21,46 @@ login_manager.login_message = "로그인이 필요합니다."
 
 @login_manager.user_loader      # 세션에 저장된 ID에 해당하는 user객체를 반환하는 callback 메소드, 유효하지 않은 ID일 경우 None을 반환한다.
 def load_user(id):
-    return User(id, auth=True)
+        logger.info("load_user()")
+        try:
+            from db.database import DBManager
+            cursor = DBManager.conn.cursor()
+            cursor.callproc('get_user_by_id', (id,))  # argument 1개일 때도 ,하나 붙여줘야 제대로 인식함.
+            r = cursor.fetchall()
+
+            if r : #id가 존재
+                return User(id, name=r[0][2], auth=True)
+            else:
+                return None
+        except Exception as e:
+            logger.info(str(e))
+            raise e
+
+
 
 
 @auth_api.route('/login', methods=['POST'])
 def api_login():
-    error = False
-    msg = ''
     id = request.values.get('id') if "id" in request.form else None
     pw = request.values.get('pw') if "pw" in request.form else None
     logger.info("id : "+id)
     try:
-        from db.database import DBManager
-        cursor = DBManager.conn.cursor()
+        from db.database import DBManager   # DB관련 모듈 import
+        cursor = DBManager.conn.cursor()    # cursor 객체를 얻는다.
         cursor.callproc('get_user_by_id', (id,))    #argument 1개일 때도 ,하나 붙여줘야 제대로 인식함.
         r = cursor.fetchall()
-        logger.info(str(r))
+        logger.info("유저 정보 : "+str(r))
 
         if r:
             #id 존재
             logger.info("pw 체크 : "+ r[0][4])
             if r[0][4] == pw:
                 session['user_id'] = id
-                login_user(User(id,auth=True,name=r[0][3]))
+
+                # 아이디와 비밀번호가 일치하면 로그인 처리
+                # 직접 정의한 'User'클래스의 객체를 인자로 넘겨준다.
+                login_user(User(id, name=r[0][2], auth=True))
+
                 flash("로그인 되었습니다.")
                 return redirect(url_for('main_view.index'))
             else:

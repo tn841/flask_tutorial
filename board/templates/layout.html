@@ -17,7 +17,7 @@
 
     <span style="float:right">
     {% if current_user.is_authenticated %}
-        {{ current_user['user_id'] }}님 <a href="/api/logout">로그아웃</a>
+        {{ current_user }}님 <a href="/api/logout">로그아웃</a>
     {% else %}
         <a href="/login">로그인</a>
     {% endif %}
