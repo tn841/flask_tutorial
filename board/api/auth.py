@@ -12,6 +12,7 @@ from werkzeug.utils import redirect
 
 auth_api = Blueprint("auth_api", __name__, url_prefix='/api')
 
+#Flask-Login 모듈
 login_manager = LoginManager()  # 로그인/로그아웃 관련 세션을 관리해주는 flask-login 모듈 객체 생성
 login_manager.init_app(app)     # flask객체와 연동
 
@@ -21,12 +22,13 @@ login_manager.login_message = "로그인이 필요합니다."
 
 @login_manager.user_loader      # 세션에 저장된 ID에 해당하는 user객체를 반환하는 callback 메소드, 유효하지 않은 ID일 경우 None을 반환한다.
 def load_user(id):
-        logger.info("load_user()")
+        logger.info("load_user(), session:"+str(session))
         try:
             from db.database import DBManager
             cursor = DBManager.conn.cursor()
             cursor.callproc('get_user_by_id', (id,))  # argument 1개일 때도 ,하나 붙여줘야 제대로 인식함.
             r = cursor.fetchall()
+            cursor.close()
 
             if r : #id가 존재
                 return User(id, name=r[0][2], auth=True)
@@ -35,6 +37,8 @@ def load_user(id):
         except Exception as e:
             logger.info(str(e))
             raise e
+        finally:
+            cursor.close()
 
 
 
@@ -49,6 +53,7 @@ def api_login():
         cursor = DBManager.conn.cursor()    # cursor 객체를 얻는다.
         cursor.callproc('get_user_by_id', (id,))    #argument 1개일 때도 ,하나 붙여줘야 제대로 인식함.
         r = cursor.fetchall()
+        cursor.close()
         logger.info("유저 정보 : "+str(r))
 
         if r:
@@ -72,6 +77,8 @@ def api_login():
 
     except Exception as e:
         logger.info(str(e))
+    finally:
+        cursor.close()
 
 @auth_api.route('/logout', methods=['GET'])
 @login_required

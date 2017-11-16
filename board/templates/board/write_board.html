@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+{% block title %} 게시글 쓰기 {% endblock %}
+{% block head %} {{super()}} {% endblock %}
+{% block body %}
+<h1>게시글 쓰기<h1><hr>
+<form action={{url_for("board_api.insert_post")}} method="POST" id="post_form">
+    등록 게시판 :
+    <select name="board_list" form="post_form">
+        <option value="1">1</option>
+        <option value="2">2</option>
+    </select>
+    게시글 제목 : <input type="text" name="p_title"/><br>
+    작성자 : <input type="text" name="p_writer" /><br>
+    내용<br>
+    <input type="textarea">
+    <input type="submit">
+</form>
+{% endblock %}

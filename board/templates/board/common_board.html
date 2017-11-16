@@ -4,5 +4,16 @@
 {% block body %}
 
 <h1>자유 게시판</h1><hr>
-
+<div>
+    <a href={{url_for("post_view.post_form", board_name="common_board")}}>글쓰기</a>
+</div>
+{% if post_list %}
+<ul>
+    {% for post in post_list %}
+    <li>{{post[0]}} | {{post[1]}} | {{post[2]}} | {{post[3]}} | {{post[4]}}</li>
+    {% endfor%}
+</ul>
+<p>총 게시글 : </p>
+<p>총 현재 : </p>
+{% endif %}
 {% endblock %}

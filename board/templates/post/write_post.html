@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+{% block title %} 게시글 쓰기 {% endblock %}
+{% block head %} {{super()}} {% endblock %}
+{% block body %}
+<h1>게시글 쓰기</h1><hr>
+<form action={{url_for("post_api.insert_post")}} method="POST" id="post_form">
+    등록 게시판 : {{board_name}} <br>
+    게시글 제목 : <input type="text" name="p_title"/><br>
+    작성자 : {{current_user['user_name'] if current_user.is_authenticated else '비회원'}}<br>
+    <input type="hidden" name="p_writer" value={{current_user['user_name'] if current_user.is_authenticated else '비회원'}}/>
+    <input type="hidden" name="b_type" value={{board_name}}/>
+    내용<br>
+    <textarea form="post_form" name="p_body" ></textarea>
+    <input type="submit">
+</form>
+{% endblock %}

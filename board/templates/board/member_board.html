@@ -4,5 +4,12 @@
 {% block body %}
 
 <h1>회원 게시판</h1><hr>
-
+<div>
+    <a href={{url_for("post_view.post_form", board_name="member_board")}}>글쓰기</a>
+    <ul>
+    {% for post in post_list %}
+    <li>{{post[0]}} | {{post[1]}} | {{post[2]}} | {{post[3]}} | {{post[4]}}</li>
+    {% endfor%}
+    </ul>
+</div>
 {% endblock %}

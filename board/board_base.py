@@ -3,6 +3,8 @@ import datetime
 import os, sys
 
 from flask import Flask
+from flask.globals import g
+
 from mylogger import logger
 
 reload(sys)
@@ -40,20 +42,45 @@ basedir = os.path.dirname(os.path.abspath(__file__))
 #api 등록
 from api.auth import auth_api
 from api.register import register_api
+from api.board import board_api
+from api.post import post_api
 app.register_blueprint(auth_api)
 app.register_blueprint(register_api)
+app.register_blueprint(board_api)
+app.register_blueprint(post_api)
 
 #뷰함수 등록
 from views.main import main_view
 from views.auth import auth_view
 from views.register import register_view
 from views.board import board_view
+from views.post import post_view
 app.register_blueprint(main_view)
 app.register_blueprint(auth_view)
 app.register_blueprint(register_view)
 app.register_blueprint(board_view)
+app.register_blueprint(post_view)
 
 #기타 설정
+@app.context_processor
+def util_func():
+
+    def get_board_list():
+        try:
+            cursor = DBManager.conn.cursor()
+            cursor.callproc('select_board_list')
+            result = cursor.fetchall()
+            cursor.close()
+            logger.info(str(result))
+            b_list = []
+            for b_id, b_name, b_type, b_url in result:
+                b_list.append([b_name, b_type, b_url])
+            logger.info(str(b_list))
+            return b_list
+        except Exception as e:
+            raise e
+
+    return dict(board_list=get_board_list)
 
 
 
