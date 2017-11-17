@@ -62,6 +62,8 @@ app.register_blueprint(board_view)
 app.register_blueprint(post_view)
 
 #기타 설정
+
+#app 전역에서 호출 가능한 util_func() 정의
 @app.context_processor
 def util_func():
 

@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from flask.blueprints import Blueprint
-from flask.globals import request
+from flask.globals import request, current_app
 from flask.helpers import url_for
 from flask.templating import render_template
 from werkzeug.utils import redirect
@@ -13,7 +13,7 @@ def index():
 
 @main_view.route('/main', methods=['GET'])
 def main():
-    return render_template('main.html')
+    return render_template('main.html', config = current_app.config)
 
 @main_view.route('/test', methods=['POST'])
 def test_view():

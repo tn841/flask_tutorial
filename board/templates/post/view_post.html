@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block title %} 게시글 보기 {% endblock %}
+{% block head %} {{super()}} {% endblock %}
+{% block body %}
+<h1>게시글 보기</h1><hr>
+<p>글 번호 : {{post_data[0]}}</p>
+<p>작성자 : {{post_data[3]}}</p>
+<p>작성일 : {{post_data[4]}}</p>
+<p>글 제목 : {{post_data[1]}}</p>
+<p>글 내용 : {{post_data[2]}}</p>
+
+<hr>
+{% if post_data[5] == 1 %}
+<a href={{url_for("board_view.common_board")}}>목록으로</a>
+{% elif post_data[5] == 2 %}
+<a href={{url_for("baord_view.member_board")}}>목록으로</a>
+{% endif %}
+
+{% if current_user.is_authenticated and post_data[3] == current_user['user_name']+'/' %}
+<a href={{url_for("post_api.modify_post", p_id=post_data[0])}}>수정</a>
+<a href={{url_for("post_api.remove_post", p_id=post_data[0])}}>삭제</a>
+{% endif %}
+
+{% endblock %}

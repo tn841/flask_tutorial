@@ -9,4 +9,10 @@
 {% if current_user.is_authenticated %}
     <p>{{ current_user['user_id'] }}님 반갑습니다.</p>
 {% endif %}
+
+<div>
+    <p>application config 확인</p>
+    {{config}}
+</div>
+
 {% endblock %}
