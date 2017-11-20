@@ -11,8 +11,13 @@
 {% endif %}
 
 <div>
-    <p>application config 확인</p>
-    {{config}}
+    <h3>application config 확인</h3>
+    <ul>
+    {% for item in config %}
+    <li>{{item}} : {{config[item]}}</li>
+    {% endfor %}
+
+    </ul>
 </div>
 
 {% endblock %}

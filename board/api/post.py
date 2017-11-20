@@ -8,7 +8,8 @@ from flask.globals import request, current_app
 from db.database import DBManager
 from flask.helpers import flash, url_for, make_response
 from flask.json import jsonify
-from flask_login.utils import login_required
+from flask.templating import render_template
+from flask_login.utils import login_required, current_user
 from mylogger import logger
 from werkzeug.utils import redirect
 
@@ -49,6 +50,23 @@ def insert_post():
         logger.info(str(e))
     finally:
         cursor.close()
+
+
+@post_api.route("/modify_post_action", methods=['POST'])
+def modify_post_action():
+    data = request.values
+    try:
+        cursor = DBManager.conn.cursor()
+        sql = "update test_post set p_title='%s', p_body='%s' where p_id = %s" % (str(data.get('p_title')), data.get('p_body'), str(data.get('p_id')).replace('/',''))
+        print sql
+        rr = cursor.execute(sql)
+        print "수정결과 :"+str(rr)
+        cursor.close()
+        flash(str(data.get('p_id'))+"번 글이 수정되었습니다.")
+        return redirect(url_for("board_view.member_board"))
+    except Exception as e:
+        raise e
+
 
 
 @post_api.route("/get_post_list", methods=['POST'])
@@ -142,7 +160,30 @@ def get_member_post_list():
 def remove_post():
     p_id = request.values.get("p_id")
     #삭제전에 삭제하려는 글이 현재 로그인한 사용자가 작성한 글인지 검증 필요
-    return p_id+"번 글 삭제"
+    try:
+        cursor = DBManager.conn.cursor()
+        sql = "select p_date, board_id from test_post where p_id = %s" % (p_id)
+        cursor.execute(sql)
+        result = cursor.fetchone()
+        cursor.close
+        if result[0].replace('/','') == current_user.user_id:
+            print "작성자가 삭제를 시도함, board_id:"+str(result[1])
+            sql = "delete from test_post where p_id = %s" % (p_id)
+            cursor = DBManager.conn.cursor()
+            result2 = cursor.execute(sql)
+            cursor.close()
+            print "삭제 결과 : "+str(result2)
+            if result[1] == 1:
+                flash(p_id+"번 게시글이 삭제되었습니다.")
+                return redirect(url_for("board_view.common_board"))
+            elif result[1] == 2:
+                flash(p_id+"번 게시글이 삭제되었습니다.")
+                return redirect(url_for("board_view.member_board"))
+        else:
+            flash("잘못된 접근 입니다.")
+            return redirect(url_for("main_view.index"))
+    except Exception as e:
+        raise  e
 
 
 @post_api.route("/modify_post", methods=["get"])
@@ -150,4 +191,28 @@ def remove_post():
 def modify_post():
     p_id = request.values.get("p_id")
     # 수정하려는 글이 현재 로그인한 사용자가 작성한 글인지 검증 필요
-    return p_id+"번 글 수정"
+    try:
+        data={}
+        cursor = DBManager.conn.cursor()
+        sql = "select * from test_post where p_id = %s" % (p_id)
+        cursor.execute(sql)
+        result = cursor.fetchone()
+        cursor.close
+
+        print str(result)
+        data['title'] = result[1]
+        data['body'] = result[2]
+        data['p_id'] = result[0]
+
+        if str(result[3]).replace('/','') == current_user.user_id:
+            print "작성자가 수정을 시도함, board_id:"+str(result[1])
+            #flash(p_id + "번 게시글이 수정 되었습니다.")
+            if result[5] == 1:
+                return render_template('/post/modify_post.html', data=data, board_name="common_board")
+            elif result[5] == 2:
+                return render_template('/post/modify_post.html', data=data, board_name="member_board")
+        else:
+            flash("잘못된 접근 입니다.")
+            return redirect(url_for("main_view.index"))
+    except Exception as e:
+        raise  e

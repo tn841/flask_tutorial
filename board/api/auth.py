@@ -8,6 +8,7 @@ from board_base import app
 from flask_login.utils import login_user, logout_user, current_user, login_required, login_fresh
 from mylogger import logger
 from db.user import User
+from werkzeug.security import check_password_hash
 from werkzeug.utils import redirect
 
 auth_api = Blueprint("auth_api", __name__, url_prefix='/api')
@@ -58,8 +59,9 @@ def api_login():
 
         if r:
             #id 존재
-            logger.info("pw 체크 : "+ r[0][4])
-            if r[0][4] == pw:
+            logger.info("pw 체크) DB에 있는 hashedpw: %s, 입력한pw:%s,  check_password_hash():%s" % (r[0][4], pw, check_password_hash(str(r[0][4]), pw)))
+            #if r[0][4] == pw:
+            if check_password_hash(r[0][4], pw):
                 session['user_id'] = id
 
                 # 아이디와 비밀번호가 일치하면 로그인 처리

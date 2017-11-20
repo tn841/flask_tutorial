@@ -4,6 +4,7 @@ from flask.globals import request
 from flask.helpers import make_response, url_for, flash
 from flask.templating import render_template
 from mylogger import logger
+from werkzeug.security import generate_password_hash
 from werkzeug.utils import redirect
 
 register_api = Blueprint('register_api',__name__,url_prefix="/api")
@@ -20,8 +21,8 @@ def register_action():
     try:
         from db.database import DBManager
         cursor = DBManager.conn.cursor()
-
-        cursor.callproc('insert_user', (id, name, email, pw, 0))
+        hashed_pw = generate_password_hash(pw, salt_length=9)
+        cursor.callproc('insert_user', (id, name, email, hashed_pw, 0))
         cursor.execute('select @_insert_user_4')
         result = cursor.fetchone()
         cursor.close()

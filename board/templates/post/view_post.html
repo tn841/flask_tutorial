@@ -13,7 +13,7 @@
 {% if post_data[5] == 1 %}
 <a href={{url_for("board_view.common_board")}}>목록으로</a>
 {% elif post_data[5] == 2 %}
-<a href={{url_for("baord_view.member_board")}}>목록으로</a>
+<a href={{url_for("board_view.member_board")}}>목록으로</a>
 {% endif %}
 
 {% if current_user.is_authenticated and post_data[3] == current_user['user_name']+'/' %}
