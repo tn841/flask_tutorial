@@ -4,7 +4,7 @@
 {% block body %}
 <h1>게시글 보기</h1><hr>
 <p>글 번호 : {{post_data[0]}}</p>
-<p>작성자 : {{post_data[3]}}</p>
+<p>작성자 : {{post_data[3].replace("/","")}}</p>
 <p>작성일 : {{post_data[4]}}</p>
 <p>글 제목 : {{post_data[1]}}</p>
 <p>글 내용 : {{post_data[2]}}</p>

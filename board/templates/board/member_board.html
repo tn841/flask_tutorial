@@ -3,9 +3,10 @@
 {% block head %} {{super()}} {% endblock %}
 {% block body %}
 
-<h1>DataTable lib</h1><hr>
-
-<a href={{url_for("post_view.post_form", board_name="member_board")}}>글쓰기</a>
+<h1>회원게시판</h1><hr>
+<div style="text-align: right">
+    <a href={{url_for("post_view.post_form", board_name="member_board")}}>글쓰기</a>
+</div>
 <div id="render_table">
 <table class="table hover" id="post_list" style="cursor:pointer">
     <thead>

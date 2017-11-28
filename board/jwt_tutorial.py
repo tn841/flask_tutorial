@@ -55,8 +55,7 @@ def jwt_func():
 
     token = jwt.encode(json_token, 'secret_key', algorithm='HS256')
     print token
-    access_token = token.decode('utf-8')
-
+    access_token = token#.decode('utf-8')
 
     session["access_token"] = access_token
     return str(access_token)
@@ -71,12 +70,10 @@ def login(id=None, pw=None):
     }
 
     token = jwt.encode(payload, 'my_secret', algorithm='HS256')
-    token = token.decode('utf-8')
     html = "<h1>jwt 테스트</h1><hr>"
     html += '<a href=/only_member>회원만</a>'
     res = make_response(html)
     res.set_cookie('my_token', value=token)
-
     return res
 
 @app.route("/only_member")

@@ -11,13 +11,20 @@
 {% endif %}
 
 <div>
-    <h3>application config 확인</h3>
-    <ul>
+    <a id='aa' href="javascript:;">application config 확인</a>
+    <div id="content">
     {% for item in config %}
     <li>{{item}} : {{config[item]}}</li>
     {% endfor %}
-
     </ul>
+    </div>
 </div>
-
+<script>
+    $(function(){
+        $("#content").hide();
+        $("#aa").click(function(){
+            $("#content").slideToggle();
+        });
+    });
+</script>
 {% endblock %}
