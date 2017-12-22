@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+{% block title %}채용제도{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{% block contents %}
+    <div class="container">
+        <hr>
+        <div class="page-header">
+            <h1>채용제도</h1>
+        </div>
+        <hr>
+        <h4>채용제도</h4>
+        <ol>
+            <li>정기공채</li>
+            <li>수시공채</li>
+            <li>기타채용</li>
+        </ol>
+        <hr>
+        <h4>채용절차</h4>
+        <img src="{{ url_for('static', filename='img/recImg2.png') }}" class="img-fluid" alt="채용제도">
+
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function(){
+ㄴ
+        });
+    </script>
+{% endblock %}

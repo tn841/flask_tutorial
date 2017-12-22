@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.1/css/responsive.bootstrap4.min.css">
+    
+    <!-- js library -->
+    <!-- cript src="{{ url_for('static', filename='js/jquery-1.8.3.min.js') }}"></script-->
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.1/js/responsive.bootstrap4.min.js"></script>
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    
+    
+    
+    
+    {% endblock %}
+</head>
+<body>
+
+<div class="head_nav" >
+    <div class="row">
+        <div class="col-sm-3">
+            <!--img src="{{ url_for('static', filename='img/logo.PNG') }}" /-->
+            <a href="{{ url_for('main_view.index') }}">홈</a> | 
+            <a href="{{ url_for('admin_view.admin_main') }}">(관리자)</a>
+        </div>
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-5">
+            <div class="float-right">
+                {% if current_user.user_name == '최고관리자' %}
+                {{ current_user.user_name }}님 | <a href="{{ url_for('admin_auth_api.logout') }}">로그아웃</a><br>
+                <a href="{{ url_for('admin_view.admin_notice') }}">채용공고 관리</a> |
+                <a href="{{ url_for('admin_view.admin_resume_list') }}">지원서 관리</a> |
+                <a href="{{ url_for('admin_view.admin_user_list') }}">회원 관리</a>
+                
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="division"></div>
+<div class="img_division" style="height:10px">
+</div>
+
+<div class="row">
+    <div class="col-sm-1">
+        {% block leftmenu %}{% endblock %}
+    </div>
+    <div class="col-sm-10">
+        {% block contents %}{% endblock %}
+    </div>
+    <div class="col-sm-1">
+        {% block rightmenu %}{% endblock %}
+    </div>
+</div>
+
+
+<!--FOOTER START-->
+<div class="wrap">
+    <div class="footer">
+        <div class="container">
+			<div style="height:100px"></div>
+        </div>
+    </div>
+</div>
+<!--//FOOTER END-->
+
+{% block script %}{% endblock %}
+</body>
+</html>

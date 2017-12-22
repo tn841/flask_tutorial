@@ -1,0 +1,58 @@
+{% extends 'apply/layout.html' %}
+
+{% block apply_form %}
+    <form>
+        <div class="form-group">
+            <label for="self_intro1">1. 1번 질문</label>
+            <textarea class="form-control" id="self_intro1" rows="3" name="self_intro1">{{ data['r_selfintro1'] if data['r_selfintro1'] else '' }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="self_intro2">2. 2번 질문</label>
+            <textarea class="form-control" id="self_intro2" rows="3" name="self_intro2">{{ data['r_selfintro2'] if data['r_selfintro2'] else '' }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="self_intro3">3. 3번 질문</label>
+            <textarea class="form-control" id="self_intro3" rows="3" name="self_intro3">{{ data['r_selfintro3'] if data['r_selfintro3'] else '' }}</textarea>
+        </div>
+    </form>
+{% endblock %}
+
+{% block script %}
+    {{ super() }}
+    <script>
+        $(function(){
+            $("#btn_group button").on('click', function(){
+                var btn = $(this).text();
+                var data = {
+                    "self_intro1" : $("#self_intro1").val(),
+                    "self_intro2" : $("#self_intro2").val(),
+                    "self_intro3" : $("#self_intro3").val(),
+                    "notice_no" : {{ data["r_notice_no"] }}+''
+                };
+                console.log(data);
+
+                var ajax_flag = true;
+                $.each(data, function(key, val){
+                    console.log(key+", "+val);
+                    if(val == ''){
+                        alert(key+" 항목을 입력하세요.");
+                        $("#"+key).focus();
+                        ajax_flag = false;
+                        return false;
+                    }
+                });
+
+                if(ajax_flag){
+                    var result = AJAXCall("{{ url_for("apply_api.step4_save") }}", data, function(d){
+                        alert(d["RETURNMSG"]);
+                        if(d["RETURNCODE"] == 0 && btn == '다음'){
+                            location.href="{{ url_for('apply_view.apply_step5', notice_no=data['r_notice_no']) }}";
+                        }else if(d["RETURNCODE"] == 0 && btn == '이전'){
+                            location.href="{{ url_for('apply_view.apply_step3', notice_no=data['r_notice_no']) }}";
+                        }
+                    });
+                }
+            });//btn_click
+        })
+    </script>
+{% endblock %}

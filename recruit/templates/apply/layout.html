@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+{% block title %}지원{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{% block contents %}
+    <div class="container">
+        <hr>
+        <div class="page-header">
+            <h1>지원하기</h1>
+        </div>
+        <hr>
+        <ul class="nav nav-pills nav-justified">
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if data['step'] == 1 else '' }}" href="{{ url_for("apply_view.apply_step1", notice_no=data['r_notice_no']) }}">1.지원분야</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if data['step'] == 2 else '' }}" href="{{ url_for("apply_view.apply_step2", notice_no=data['r_notice_no']) }}">2.개인정보</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if data['step'] == 3 else '' }}" href="{{ url_for("apply_view.apply_step3", notice_no=data['r_notice_no']) }}">3.자격사항</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if data['step'] == 4 else '' }}" href="{{ url_for("apply_view.apply_step4", notice_no=data['r_notice_no']) }}">4.자기소개</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if data['step'] == 5 else '' }}" href="{{ url_for("apply_view.apply_step5", notice_no=data['r_notice_no']) }}">5.확인 및 제출</a>
+            </li>
+        </ul>
+        <br>
+
+        {% block apply_form %}{% endblock %}
+        <div class="text-center" id="btn_group">
+            <button type="button" class="btn btn-primary" {{ 'style=display:none' if data['step'] == 1 else '' }}>이전</button>
+            <button type="button" class="btn btn-primary">{{ '제출완료' if data['step'] == 5 and data['r_submit'] == 1 else '제출' if data['step'] == 5 else '저장' }}</button>
+            <button type="button" class="btn btn-primary" {{ 'style=display:none' if data['step'] == 5 else '' }}>다음</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'admin/admin_layout.html' %}
+{% block title %}관리자 페이지{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+
+
+{% block contents %}
+    <div class="container">
+        <hr>
+        <div class="page-header">
+            <h1>관리자 메인</h1>
+        </div>
+        <hr>
+        {% with msges = get_flashed_messages() %}
+            {% if msges %}
+                {% for msg in msges %}
+                <div class="alert alert-info">
+                    <strong>Info!</strong> {{ msg.decode('utf-8') }}
+                </div>
+                {% endfor %}
+            {%  endif %}
+        {% endwith %}
+        
+        {% if current_user.user_name != '최고관리자' %}
+       	<form name="login_form" method="POST">
+            <div class="form-group">
+                <label for="id">관리자ID:</label>
+                <input type="text" class="form-control" id="id" name="id">
+            </div>
+            <div class="form-group">
+                <label for="pwd">비밀번호:</label>
+                <input type="password" class="form-control" id="pwd" name="pwd">
+            </div>
+            <button type="button" class="btn btn-default" id="login_btn">로그인</button>
+            <input id="notice_no" type="hidden" name="notice_no" value="">
+        </form>
+        <br>
+        <p>id:root</p>
+        <p>pw:root</p>
+        
+		{% else %}
+		<div class="row">
+			<a href="{{ url_for('admin_view.admin_notice') }}">채용공고 관리</a> |
+            <a href="{{ url_for('admin_view.admin_resume_list') }}">지원서 관리</a> |
+            <a href="{{ url_for('admin_view.admin_user_list') }}">회원 관리</a>
+		</div>
+		{% endif %}
+    </div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+	$(function(){
+		
+		$("#login_btn").one('click',function(){
+          	document.login_form.action = "{{ url_for('admin_auth_api.admin_login') }}";
+          	document.login_form.submit();
+      	});
+
+	})
+</script>
+{% endblock %}
+
+
+
+

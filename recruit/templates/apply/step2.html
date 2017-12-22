@@ -1,0 +1,131 @@
+{% extends 'apply/layout.html' %}
+
+{% block apply_form %}
+    <form>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="name">이름</label>
+                <input type="text" class="form-control" id="name" placeholder="이름" value="{{ data['r_name'] if data['r_name'] else '' }}">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="birth">생년월일</label>
+                <input type="text" class="form-control" id="birth" placeholder="900101" value="{{ data['r_birth'] if data['r_birth'] else '' }}">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="gender">성별</label>
+                <select id="gender" class="form-control">
+                    <option>남</option>
+                    <option>여</option>
+                </select>
+            </div>
+        </div>
+          <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="addr">주소</label>
+                <input type="text" class="form-control" id="addr" placeholder="주소" value="{{ data['r_addr'] if data['r_addr'] else '' }}">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="phone">연락처</label>
+                <input type="text" class="form-control" id="phone" placeholder="010-0000-0000" value="{{ data['r_phone'] if data['r_phone'] else '' }}">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-2">
+                <label for="school_type">학력</label>
+                <select id="school_type" class="form-control">
+                    <option>선택</option>
+                    <option>대학원졸</option>
+                    <option>대졸</option>
+                    <option>초대졸</option>
+                    <option>고졸졸</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="school_name">학교명</label>
+                <input type="text" class="form-control" id="school_name" placeholder="학교명" value="{{ data['r_school_name'] if data['r_school_name'] else '' }}">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="major">학과</label>
+                <input type="text" class="form-control" id="major" placeholder="학과" value="{{ data['r_major'] if data['r_major'] else ''}}">
+            </div>
+            <div class="form-group col-md-2">
+                <label for="grade">학점</label>
+                <input type="text" class="form-control" id="grade" placeholder="ex) 3.0/4.5" value="{{ data['r_grade'] if data['r_grade'] else '' }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="career">경력</label>
+            <input type="text" class="form-control" id="career" placeholder="경력을 기술하세요." value="{{ data['r_career'] if data['r_career'] else ''  }}">
+        </div>
+
+    </form>
+    <br>
+{% endblock %}
+
+
+{% block script %}
+    {{ super() }}
+    <script>
+        $(function(){
+            var gender = "{{ data['r_gender'] }}";
+            var school_type = "{{ data['r_school_type'] }}";
+
+            var $gender_opts = $("#gender").children();
+            for(var idx=0; idx < $gender_opts.length; idx++){
+                if($($gender_opts[idx]).val() == gender){
+                    $($gender_opts[idx]).prop('selected',true);
+                }
+            }
+
+            var $school_opts = $("#school_type").children();
+            for(var idx=0; idx < $school_opts.length; idx++){
+                if($($school_opts[idx]).val() == school_type){
+                    $($school_opts[idx]).prop('selected',true);
+                }
+            }
+
+
+
+            $("#btn_group button").on('click', function(){
+                var btn = $(this).text();
+                var data = {
+                    "name" : $("#name").val(),
+                    "birth" : $("#birth").val(),
+                    "gender" : $("#gender").val(),
+                    "addr" : $("#addr").val(),
+                    "phone" : $("#phone").val(),
+                    "school_type" : $("#school_type").val(),
+                    "school_name" : $("#school_name").val(),
+                    "major" : $("#major").val(),
+                    "grade" : $("#grade").val(),
+                    "career" : $("#career").val(),
+                    "notice_no":{{ data["r_notice_no"] }}+''
+                };
+                console.log(data);
+
+                var ajax_flag = true;
+                $.each(data, function(key, val){
+                    console.log(key+", "+val);
+                    if(val == ''){
+                        alert(key+" 항목을 입력하세요.");
+                        $("#"+key).focus();
+                        ajax_flag = false;
+                        return false;
+                    }
+                });
+
+                if(ajax_flag){
+                    var result = AJAXCall("{{ url_for("apply_api.step2_save") }}", data, function(d){
+                        alert(d["RETURNMSG"]);
+                        if(d["RETURNCODE"] == 0 && btn == '다음'){
+                            location.href="{{ url_for('apply_view.apply_step3', notice_no=data['r_notice_no']) }}";
+                        }else if(d["RETURNCODE"] == 0 && btn == '이전'){
+                            location.href="{{ url_for('apply_view.apply_step1', notice_no=data['r_notice_no']) }}";
+                        }
+                    });
+                }
+            });//btn_click
+
+        })
+    </script>
+{% endblock %}

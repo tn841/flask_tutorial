@@ -1,0 +1,90 @@
+{% extends 'layout.html' %}
+{% block title %}채용공고{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{% block contents %}
+    <div class="container">
+        <hr>
+        <div class="page-header">
+            <h1>채용공고</h1>
+        </div>
+        <hr>
+        {% with lists = get_flashed_messages() %}
+            {% for list in lists %}
+                <div class="alert alert-info">
+                    <strong>Info!</strong> {{ list.decode("utf-8") }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+        <p>
+        	<a href="{{ url_for('notice_view.notice_board', n_type='1') }}">모든 공고</a> | 
+        	<a href="{{ url_for('notice_view.notice_board', n_type='2') }}">진행중인 공고</a> | 
+        	<a href="{{ url_for('notice_view.notice_board', n_type='3') }}">마감된 공고</a> | 
+        	<a href="{{ url_for('notice_view.notice_board', n_type='4') }}">진행 예정 공고</a>
+        </p>
+        <table class="table table-bordered table-hover" >
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>공고명</th>
+                <th>시작일</th>
+                <th>마감일</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if data %}
+                {% for item in data %}
+                {# if loop.index0 != 0 #}
+                    <tr>
+                        <td>{{ item[0] }}</td>
+                        <td><a href="{{ url_for('notice_view.notice_post', p_no=item[0]) }}">{{ item[1] }}</a>
+                            <span class="badges" d_val="{{ item[3] }}" s_val="{{ item[2] }}"></span>
+                        </td>
+                        <td>{{ datetime_func(item[2]) }}</td>
+                        <td>{{ datetime_func(item[3]) }}</td>
+                    </tr>
+                {# endif #}
+                {% endfor %}
+            {% endif %}
+            </tbody>
+        </table>
+
+        <ul id="pagenation" class="pagination justify-content-center">
+          <li class="page-item {{ 'disabled' if cur_page==0 else '' }}"><a class="page-link" href="{{ url_for('notice_view.notice_board', page=(cur_page/per_page)|int) }}">Previous</a></li>
+          {% for idx in range(0, total_page) %}
+          <li class="page-item {{ 'active' if (cur_page/per_page)|int == idx else ''  }}"><a class="page-link " href="{{ url_for('notice_view.notice_board', page=(idx+1)) }}">{{idx+1}}</a></li>
+          {% endfor %}
+          <li class="page-item {{ 'disabled' if total_page == (cur_page/per_page)|int+1 else '' }}"><a class="page-link" href="{{ url_for('notice_view.notice_board', page=((cur_page/per_page)|int) + 2) }}">Next</a></li>
+      	</ul>
+
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function(){
+        	var n_type = getUrlVars()['n_type'];
+        	
+        	$.each($('#pagenation').children(), function(key,val){
+        		var url = $(val).find('a').attr('href');
+        		$(val).find('a').attr('href', url+'?n_type='+n_type);
+        	});
+        
+        
+        
+            var $badges = $(".badges");
+            $.each($badges, function(key, val){
+                var end_date = new Date($(val).attr("d_val"));
+                var start_date = new Date($(val).attr("s_val"));
+                if(end_date >= new Date() && start_date <= new Date()){
+                    $(val).append('<span class="badge badge-primary">공고진행중</span>');
+                }else if(end_date < new Date()){
+                    $(val).append('<span class="badge badge-danger">공고마감</span>');
+                    $($(val).prev()[0]).removeAttr("href");
+                }else if(start_date > new Date()){
+                	$(val).append('<span class="badge badge-warning">진행예정</span>');
+                    $($(val).prev()[0]).removeAttr("href");
+                }
+            });
+        });
+    </script>
+{% endblock %}

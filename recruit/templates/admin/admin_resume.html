@@ -1,0 +1,128 @@
+{% extends 'admin/admin_layout.html' %}
+{% block title %}관리자 페이지{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block contents %}	
+    <div class="container">
+        <hr>
+        <div class="page-header">
+            <h1>지원서 관리</h1>
+        </div>
+        <hr>
+        {% with msges = get_flashed_messages() %}
+            {% if msges %}
+                {% for msg in msges %}
+                <div class="alert alert-info">
+                    <strong>Info!</strong> {{ msg.decode('utf-8') }}
+                </div>
+                {% endfor %}
+            {%  endif %}
+        {% endwith %}
+        
+       	<label for="notice_sel">채용 공고 목록</label>
+       	<select class="form-control" id='notice_sel'>
+       		<option value="" selected>전체</option>
+       		{% for val in notice_data %}
+       			<option value="{{notice_data[val]['n_no']}}">{{ notice_data[val]['n_title'] }}</option>
+       		{% endfor %}
+       	</select>
+       	
+        <br>
+        
+        <label>이력서</label>
+   		<table id="post_list" class="table table-hover table table-bordered nowrap" cellspacing="0" >
+		    <thead>
+		        <tr>
+		            {% for col in col_names %}
+		            <th>{{ col }}</th>
+		            {% endfor %}
+		        </tr>
+		    </thead>
+		    <tbody>
+		    </tbody>
+		</table>
+
+	
+    </div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+	$(function(){
+
+		var notice_no = '';
+						
+		var table = $("#post_list").DataTable({
+			"processing":true,
+			"searching":true,
+			"serverSide":true,
+			ajax : {
+				"url":"{{url_for('admin_resume_api.get_resume_list')}}",
+				"type":"POST",
+				"data":{"notice_no":$("#notice_sel :selected").val()}
+			},
+			"columns": [
+				{% for col in col_names %}
+					{% if col not in showing_col %}
+						{"data":"{{ col }}", className: "none"},
+					{% else %}
+						{"data":"{{ col }}"},
+					{% endif %}
+		        {% endfor %}
+	        ],
+	        "order":[[0, "desc"]],
+		    responsive: {
+	            details: {
+	                display: $.fn.dataTable.Responsive.display.modal( {
+	                    header: function ( row ) {
+	                        var data = row.data();
+	                        return '<'+data['n_title']+'> 부문 이력서 <br>지원자 성명 : '+data['r_name'];
+	                    }
+	                } ),
+	                //renderer: $.fn.dataTable.Responsive.renderer.tableAll(),
+	                renderer:function(api, rowIdx,colums){
+	                	//datatables reference : https://datatables.net/reference/option/responsive.details.renderer
+	                	return '<embed width="100%" height="700" src="{{ url_for("main_view.pdf_test") }}">';
+	                },
+	                type:'column',
+	                target:'tr'
+	            }
+	        },
+	        columnDefs: [{
+	        	className: 'control',
+	        	orderable: false,
+	        	tagets: 0
+	        }]
+		});
+		
+		
+		$("#notice_sel").on("change", function(){
+			notice_no = $("#notice_sel :selected").val();
+			
+			var url = table.ajax.url();
+			if( url.includes('?') ){
+				s_idx = url.indexOf("?");
+				url = url.substring(0,s_idx);	
+			}
+			table.ajax.url(url+"?notice_no="+$("#notice_sel :selected").val());
+			table.ajax.reload();
+		});
+		
+		
+		/*table.on('click', 'tbody tr', function(){
+            var r_no = $($(this).children()[0]).text();
+            console.log(r_no);
+            //location.href="/post_view/"+p_id;
+        });*/
+		
+		
+	})
+</script>
+{% endblock %}
+
+
+
+

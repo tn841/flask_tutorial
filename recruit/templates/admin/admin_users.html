@@ -1,0 +1,43 @@
+{% extends 'admin/admin_layout.html' %}
+{% block title %}관리자 페이지{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+
+
+{% block contents %}
+    <div class="container">
+        <hr>
+        <div class="page-header">
+            <h1>회원 관리</h1>
+        </div>
+        <hr>
+        {% with msges = get_flashed_messages() %}
+            {% if msges %}
+                {% for msg in msges %}
+                <div class="alert alert-info">
+                    <strong>Info!</strong> {{ msg.decode('utf-8') }}
+                </div>
+                {% endfor %}
+            {%  endif %}
+        {% endwith %}
+        
+
+    </div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+	$(function(){
+		
+		$("#login_btn").one('click',function(){
+          	document.login_form.action = "{{ url_for('admin_auth_api.admin_login') }}";
+          	document.login_form.submit();
+      	});
+
+	})
+</script>
+{% endblock %}
+
+
+
+

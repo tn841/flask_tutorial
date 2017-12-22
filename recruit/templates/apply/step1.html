@@ -1,0 +1,104 @@
+{% extends 'apply/layout.html' %}
+
+{% block apply_form %}
+<form>
+    <div class="form-group" id="group1">
+        <label for="sel1">직군:</label>
+        <select class="form-control" id="sel1">
+            <option>선택하세요.</option>
+            <option>경영지원</option>
+            <option>마케팅</option>
+            <option>개발</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="group2" style="display:none">
+        <label for="sel2">상세:</label>
+        <select class="form-control" id="sel2">
+        </select>
+    </div>
+</form>
+{% endblock %}
+
+{% block script %}
+    {{ super() }}
+    <script>
+        $(function(){
+            var trigger = {{ 'true' if data['sel1'] else 'false' }};
+            var sel1 = '{{ data['sel1'] }}';
+            var sel2 = '{{ data['sel2'] }}';
+
+            if('{{ data['r_group1'] }}' != ''){
+                sel1 = '{{ data['r_group1'] }}';
+                trigger = true;
+            }
+
+            if('{{ data['r_group2'] }}' != ''){
+                sel2 = '{{ data['r_group2'] }}';
+            }
+
+
+
+            var $sel1 = $("#sel1").children();
+            for(var idx = 0; idx < $sel1.length; idx++){
+                if($($sel1[idx]).val() == sel1){
+                    $($sel1[idx]).prop('selected',true);
+                }
+            }
+
+
+            $("#sel1").on('change', function(){
+                var group1 = $("#sel1 option:selected").val();
+                $("#group2").attr("style","display:block");
+
+                work_list = [];
+                if(group1 == '경영지원'){
+                    work_list = ['선택하세요.', '재무', '자금', '인사', '총무','법무','IR','홍보','전략'];
+                }else if(group1 == '마케팅'){
+                    work_list = ['선택하세요.', '제휴영업','제휴관리','국내/외 마케팅','제휴협력', 'CS'];
+                }else if(group1 == '개발'){
+                    work_list = ['선택하세요.', '개발기획','결제개발','RM개발','정산개발','시스템운영'];
+                }
+
+                $("#sel2").empty();
+
+                for(var i=0; i<work_list.length; i++){
+                    if(sel2 == work_list[i]){
+                        $("#sel2").append("<option selected>"+work_list[i]+"</option>")
+                    }else{
+                        $("#sel2").append("<option>"+work_list[i]+"</option>")
+                    }
+
+                }
+
+            });
+
+            if(trigger){
+                $("#sel1").trigger("change");
+            }
+
+            $("#btn_group button").on('click', function(){
+                var btn = $(this).text();
+                var data = {
+                    "sel1" : $("#sel1").val(),
+                    "sel2" : $("#sel2").val(),
+                    "r_w_no" : {{ current_user.user_no }},
+                    "notice_no": {{ data['r_notice_no'] }}+""
+                };
+                console.log(data);
+                if(data['sel1'] == '선택하세요.' || data['sel2'] == null || data['sel2'] == '선택하세요.'){
+                    alert("지원분야를 선택하세요.");
+                }else{
+                    var result = AJAXCall("{{ url_for("apply_api.step1_save") }}", data, function(d){
+                        alert(d["RETURNMSG"]);
+                        if(d["RETURNCODE"] == 0 && btn == '다음'){
+                            location.href="{{ url_for('apply_view.apply_step2', notice_no=data['r_notice_no']) }}";
+                        }
+                    });
+                }
+            }); //btn on click
+
+        })
+    </script>
+
+{% endblock %}

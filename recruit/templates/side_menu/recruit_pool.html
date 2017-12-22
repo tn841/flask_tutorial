@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+{% block title %}인재풀{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{% block contents %}
+    <div class="container">
+        <hr>
+        <div class="page-header">
+            <h1>인재풀 등록</h1>
+        </div>
+        <hr>
+		<p>인재풀에 자신의 이력서를 등록해 놓으면 관련 직무에 채용시 자동으로 지원됩니다.</p> 
+		<button type="button" class="btn btn-default btn-lg" onclick="recruit_pool()">인재풀 등록하기</button>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function(){
+			
+        });
+        
+       	function recruit_pool(){
+       		if({{data['login_require']}} == 0){
+	        	data={
+	        		"notice_no":"0"
+	        	}
+		       	AJAXCall('{{ url_for('apply_api.create_resume') }}', data, function(r){
+		        	if(r["RETURNCODE"] == 0){
+		            	location.href='{{ url_for('apply_view.apply_step1', notice_no=0) }}';
+		            }else if(r["RETURNCODE"] == -2){
+		            	alert(r["RETURNMSG"]);
+		            	location.href='{{ url_for('mypage_view.mypage') }}';
+		            }else{
+		                alert(r["RETURNMSG"]);
+		            }
+		        });
+	        }else{
+	        	alert("로그인이 필요합니다.");
+	        	location.href='{{ url_for('auth_view.login_form', notice_no=data['recruit_pool_no']) }}';
+	        }
+       	}
+    </script>
+{% endblock %}

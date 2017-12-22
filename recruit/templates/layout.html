@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+    <!-- js library -->
+    <script src="{{ url_for('static', filename='js/jquery-1.8.3.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    {% endblock %}
+</head>
+<body>
+
+<div class="head_nav" >
+    <div class="row">
+        <div class="col-sm-3">
+            <!--img src="{{ url_for('static', filename='img/logo.PNG') }}" /-->
+            <a href="{{ url_for('main_view.index') }}">홈</a> | 
+            <a href="{{ url_for('admin_view.admin_main') }}">(관리자)</a>
+        </div>
+        <div class="col-sm-6">
+        </div>
+        <div class="col-sm-3">
+            <div class="float-right">
+                {% if current_user.is_authenticated %}
+                {{ current_user.user_name }}님 |
+                <a href="{{ url_for('mypage_view.mypage') }}">MyPage</a> |
+                <a href="{{ url_for('auth_api.logout_action') }}">로그아웃</a>
+                {% else %}
+                <a href="{{ url_for('auth_view.login_form') }}">로그인</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="division"></div>
+<div class="img_division">
+    <img src="{{ url_for('static', filename='img/visual_bg3.png') }}" style="height:100%"/>
+</div>
+
+<div class="row">
+    <div class="col-sm-2">
+        <!--img src="{{ url_for('static', filename='img/leftmenu.PNG') }}"-->
+        <ul>
+            <hr>
+            <li><a href="{{ url_for('main_view.right_people') }}">인재상</a></li>
+            <hr>
+            <li><a href="{{ url_for('main_view.recruit_system') }}">채용제도</a></li>
+            <hr>
+            <li><a href="{{ url_for('notice_view.notice_board', n_type='1') }}">채용공고</a></li>
+            <hr>
+            <li><a href="{{ url_for('main_view.recruit_faq') }}">채용FAQ</a></li>
+            <hr>
+            <li><a href="{{ url_for('main_view.recruit_pool') }}">인재풀</a></li>
+            <hr>
+        </ul>
+        {% block leftmenu %}{% endblock %}
+    </div>
+    <div class="col-sm-9">
+        {% block contents %}{% endblock %}
+    </div>
+    <div class="col-sm-1">
+        {% block rightmenu %}{% endblock %}
+    </div>
+</div>
+
+
+<!--FOOTER START-->
+<div class="wrap">
+    <div class="footer">
+        <div class="container">
+			<div style="height:100px"></div>
+        </div>
+    </div>
+</div>
+<!--//FOOTER END-->
+
+{% block script %}{% endblock %}
+</body>
+</html>

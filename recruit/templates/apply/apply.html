@@ -1,0 +1,77 @@
+{% extends 'layout.html' %}
+{% block title %}지원{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{% block contents %}
+    <div class="container">
+        <hr>
+        <div class="page-header">
+            <h1>지원하기</h1>
+        </div>
+        <hr>
+        <ul class="nav nav-pills nav-justified">
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if data['step'] == 1 else '' }}" href="{{ url_for("apply_view.apply_step1") }}">1.지원분야</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if data['step'] == 2 else '' }}" href="{{ url_for("apply_view.apply_step2") }}">2.개인정보</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if data['step'] == 3 else '' }}" href="{{ url_for("apply_view.apply_step3") }}">3.자격사항</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if data['step'] == 4 else '' }}" href="{{ url_for("apply_view.apply_step4") }}">4.자기소개</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if data['step'] == 5 else '' }}" href="{{ url_for("apply_view.apply_step5") }}">5.확인 및 제출</a>
+            </li>
+        </ul>
+        <br>
+
+        <form>
+            <div class="form-group" id="group1">
+                <label for="sel1">직군:</label>
+                <select class="form-control" id="sel1">
+                    <option>선택하세요.</option>
+                    <option>경영지원</option>
+                    <option>마케팅</option>
+                    <option>개발</option>
+                </select>
+            </div>
+            <div class="form-group" id="group2" style="display:none">
+                <label for="sel2">상세:</label>
+                <select class="form-control" id="sel2">
+                </select>
+            </div>
+        </form>
+        <div class="text-center">
+            <button type="button" class="btn">다음</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function(){
+            $("#sel1").on('change', function(){
+                var group1 = $("#sel1 option:selected").val();
+                $("#group2").attr("style","display:block");
+
+                work_list = [];
+                if(group1 == '경영지원'){
+                    work_list = ['선택하세요.', '재무', '자금', '인사', '총무','법무','IR','홍보','전략'];
+                }else if(group1 == '마케팅'){
+                    work_list = ['선택하세요.', '제휴영업','제휴관리','국내/외 마케팅','제휴협력', 'CS'];
+                }else if(group1 == '개발'){
+                    work_list = ['선택하세요.', '개발기획','결제개발','RM개발','정산개발','시스템운영'];
+                }
+
+                $("#sel2").empty();
+
+                for(var i=0; i<work_list.length; i++){
+                    $("#sel2").append("<option>"+work_list[i]+"</option>")
+                }
+
+            })
+        })
+    </script>
+{% endblock %}

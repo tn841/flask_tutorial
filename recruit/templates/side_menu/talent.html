@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+{% block title %}채용제도{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{% block contents %}
+    <div class="container">
+        <hr>
+        <div class="page-header">
+            <h1>인재상</h1>
+        </div>
+        <hr>
+
+        <img src="{{ url_for('static', filename='img/recImg1.png') }}" class="img-fluid" alt="인재상">
+
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function(){
+
+        });
+    </script>
+{% endblock %}

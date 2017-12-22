@@ -1,0 +1,67 @@
+{% extends 'layout.html' %}
+{% block title %}채용공고{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{% block contents %}
+    <div class="container">
+        <hr>
+        <div class="page-header">
+            <h1>채용공고</h1>
+        </div>
+        <hr>
+        {% with lists = get_flashed_messages() %}
+            {% for list in lists %}
+                <div class="alert alert-info">
+                    <strong>Info!</strong> {{ list.decode("utf-8") }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        <div class="container">
+            <div class="jumbotron">
+                <h1>{{ data[1] }}</h1>
+                시작일 : {{ datetime_func(data[2]) }} ~ 종료일 : {{ datetime_func(data[3]) }}
+                <p>{{ data[4] }}</p>
+            </div>
+            {% if data[7] == 'modify' %}
+            <button class="btn" id="modify_btn">수정하기</button>
+            {% elif data[7] == 'apply' %}
+            <button class="btn" id="apply_btn">지원하기</button>
+            {% elif data[7] == 'login' %}
+            <button class="btn" id="login_btn">지원하기</button>
+            {% endif %}
+        </div>
+
+
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function(){
+            $("#apply_btn").click(function(){
+                data = {
+                    "notice_no":{{ data[0] }},
+                    "sel1":"{{ data[5] }}",
+                    "sel2":"{{ data[6] }}"
+                }
+                AJAXCall('{{ url_for('apply_api.create_resume') }}', data, function(r){
+
+                    if(r["RETURNCODE"] == 0){
+                        location.href='{{ url_for('apply_view.apply_step1', sel1=data[5], sel2=data[6], notice_no=data[0]) }}';
+                        //console.log('{{ url_for('apply_view.apply_step1', sel1=data[5], sel2=data[6]) }}');
+                    }else{
+                        alert(r["RETURNMSG"]);
+                    }
+                });
+            });
+
+            $("#modify_btn").click(function(){
+                location.href='{{ url_for('apply_view.apply_step1', sel1=data[5], sel2=data[6], notice_no=data[0]) }}';
+            });
+
+            $("#login_btn").click(function(){
+                location.href='{{ url_for('auth_view.login_form', notice_no=data[0]) }}';
+            });
+        });
+    </script>
+{% endblock %}

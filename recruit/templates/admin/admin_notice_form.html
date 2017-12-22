@@ -1,0 +1,105 @@
+{% extends 'admin/admin_layout.html' %}
+{% block title %}관리자 페이지{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+
+
+{% block contents %}
+    <div class="container">
+        <hr>
+        <div class="page-header">
+            <h1>채용공고 작성</h1>
+        </div>
+        <hr>
+        {% with msges = get_flashed_messages() %}
+            {% if msges %}
+                {% for msg in msges %}
+                <div class="alert alert-info">
+                    <strong>Info!</strong> {{ msg.decode('utf-8') }}
+                </div>
+				{% endfor %} 
+			{% endif %} 
+		{% endwith %}
+
+	<table class="table table-bordered table-hover">
+		<tbody>
+			<tr>
+				<td colspan="4"><strong>공고명</strong></td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<input type="text" class="form-control" value="" id="n_title"/> 
+				</td>
+			</tr>
+			<tr>
+				<td><strong>시작일</strong>	</td>
+				<td><strong>마감일</strong>	</td>
+				<td><strong>구분1</strong>	</td>
+				<td><strong>구분2</strong>	</td>
+			</tr>
+			<tr>
+				<td><input type="date" class="form-control" value="" id="n_s_date"/></td>
+				<td><input type="date" class="form-control" value="" id="n_e_date"/></td>
+				<td><input type="text" class="form-control" value="" id="sel1"/></td>
+				<td><input type="text" class="form-control" value="" id="sel2"/></td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<strong>내용</strong>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<textarea class="form-control" rows="5" id="n_body"></textarea>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div>
+		<button type="button" class="btn">완료</button>
+		<button type="button" class="btn">취소</button>
+	</div>
+
+	
+       
+{% endblock %}
+
+
+{% block script %}
+<script>
+	$(function(){
+		
+		$(".btn").one('click', function(){
+			var text = $(this).text();
+			console.log(text);
+			if(text=='완료'){
+				data={
+					"n_title"	:$("#n_title").val(),
+					"n_s_date"	:$("#n_s_date").val(),
+					"n_e_date"	:$("#n_e_date").val(),
+					"sel1"		:$("#sel1").val(),
+					"sel2"		:$("#sel2").val(),
+					"n_body"	:$("#n_body").val()
+				}
+				
+				
+				AJAXCall("{{ url_for('admin_notice_api.create_notice') }}", data, function(d){
+					if(d["RETURNCODE"]==0){
+						alert(d["RETURNMSG"]);
+						location.href="{{ url_for('admin_view.admin_notice') }}";
+					}else if(d["RETURNCODE"]==-1){
+						alert(d["RETURNMSG"]);
+					}
+				});
+			}else if(text=='취소'){
+				location.href="{{ url_for('admin_view.admin_notice') }}";
+			}
+		});
+		
+	
+	})
+</script>
+{% endblock %}
+
+
+
+

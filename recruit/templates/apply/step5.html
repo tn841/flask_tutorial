@@ -1,0 +1,48 @@
+{% extends 'apply/layout.html' %}
+
+{% block apply_form %}
+<h3>확인 및 제출</h3>
+    <ul>
+    {% for item in data %}
+        <li>{{ item }} : {{ data[item] }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block script %}
+    {{ super() }}
+    <script>
+        $(function(){
+            $("#btn_group button").on('click', function(){
+                var btn = $(this).text();
+                if(btn == '제출'){
+                    var cf = confirm("최종 제출 하시겠습니까? \n최종 제출 후에도 마감전까지 수정이 가능합니다.");
+                    if(cf){
+                        data={
+                        	"submit_flag":"1",
+                        	"notice_no" : {{ data["r_notice_no"] }}
+                        }
+                        var result = AJAXCall("{{ url_for("apply_api.step5_save") }}", data, function(d){
+                        	if(d["RETURNCODE"]=='0'){
+                        		alert(d["RETURNMSG"]);
+                            	location.href="{{ url_for('mypage_view.mypage') }}";
+                        	}else{
+                        		alert(d["RETURNMSG"]);
+                        	}
+                        });
+
+                    }
+                }else if(btn == '이전'){
+                    location.href="{{ url_for('apply_view.apply_step4', notice_no=data['r_notice_no']) }}";
+                }
+            });
+            
+            $.each($("#btn_group button"), function(key, val){
+            	console.log(val);
+            	if($(val).text() == '제출완료'){
+            		$(val).addClass('disabled');
+            	}
+            });
+        })
+    </script>
+{% endblock %}

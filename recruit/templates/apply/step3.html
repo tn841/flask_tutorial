@@ -1,0 +1,97 @@
+{% extends 'apply/layout.html' %}
+
+{% block apply_form %}
+    <h3>자격사항</h3>
+    <form>
+        <div class="form-row" id="list1">
+            <div class="form-group col-md-4">
+                <label for="list1_cert_name">자격명</label>
+                <input type="text" class="form-control" id="list1_cert_name" name="list1_cert_name" value="{{ data['r_cert_name'] if data['r_cert_name'] else ''}}">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="list1_cert_no">자격번호</label>
+                <input type="text" class="form-control" id="list1_cert_no" name="list1_cert_no" value="{{ data['r_cert_no'] if data['r_cert_no'] else '' }}">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="list1_cert_date">발급일</label>
+                <input type="date" class="form-control" id="list1_cert_date" name="list1_cert_date" value="{{ data['r_cert_date'] if data['r_cert_date'] else  ''}}">
+            </div>
+        </div>
+        <div class="form-row float-right">
+                <button type="button" class="btn" id="append_btn">+</button>
+        </div>
+        <br><br>
+        <div class="form-group">
+            <label for="portfolio">포트폴리오</label>
+            <input type="file" class="form-control-file" id="portfolio">
+        </div>
+    </form>
+{% endblock %}
+
+{% block script %}
+    {{ super() }}
+    <script>
+        $(function(){
+            var list_cnt = 1;
+            $("#append_btn").click(function(){
+                list_cnt++;
+                if(list_cnt > 2){
+                    $("#append_btn").remove();
+                }
+                var list_html = '<div class="form-row" id="list1">\n' +
+                    '            <div class="form-group col-md-4">\n' +
+                    '                <label for="list1_cert_name">자격명</label>\n' +
+                    '                <input type="text" class="form-control" id="list1_cert_name" name="list1_cert_name">\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group col-md-4">\n' +
+                    '                <label for="list1_cert_no">자격번호</label>\n' +
+                    '                <input type="text" class="form-control" id="list1_cert_no" name="list1_cert_no">\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group col-md-4">\n' +
+                    '                <label for="list1_cert_date">발급일</label>\n' +
+                    '                <input type="date" class="form-control" id="list1_cert_date" name="list1_cert_date">\n' +
+                    '            </div>\n' +
+                    '        </div>';
+                list_html = list_html.replace(/list1/g, "list"+list_cnt);
+                var list_str = "#list"+(list_cnt-1);
+                console.log(list_str);
+                $(list_str).after(list_html);
+            });
+
+            $("#btn_group button").on('click', function(){
+                var btn = $(this).text();
+                var data = {
+                    "list1_cert_name" : $("#list1_cert_name").val(),
+                    "list1_cert_no" : $("#list1_cert_no").val(),
+                    "list1_cert_date" : $("#list1_cert_date").val(),
+                    "notice_no" : {{ data["r_notice_no"] }}+''
+                };
+                console.log(data);
+
+                var ajax_flag = true;
+                $.each(data, function(key, val){
+                    console.log(key+", "+val);
+                    if(val == ''){
+                        alert(key+" 항목을 입력하세요.");
+                        $("#"+key).focus();
+                        ajax_flag = false;
+                        return false;
+                    }
+                });
+
+                if(ajax_flag){
+                    var result = AJAXCall("{{ url_for("apply_api.step3_save") }}", data, function(d){
+                        alert(d["RETURNMSG"]);
+                        if(d["RETURNCODE"] == 0 && btn == '다음'){
+                            location.href="{{ url_for('apply_view.apply_step4', notice_no=data['r_notice_no']) }}";
+                        }else if(d["RETURNCODE"] == 0 && btn == '이전'){
+                            location.href="{{ url_for('apply_view.apply_step2', notice_no=data['r_notice_no']) }}";
+                        }
+                    });
+                }
+            });//btn_click
+
+
+        })
+    </script>
+{% endblock %}

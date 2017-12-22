@@ -1,0 +1,18 @@
+.head_nav {
+    height:100px;
+}
+
+.division {
+    height:40px;
+    background-color: #2f3f68;
+}
+
+.img_division {
+    height:120px;
+}
+
+img {
+    max-width:100%;
+    max-height:100%;
+    z-index:-1;
+}
