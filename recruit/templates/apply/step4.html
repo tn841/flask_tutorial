@@ -43,7 +43,7 @@
                 });
 
                 if(ajax_flag){
-                    var result = AJAXCall("{{ url_for("apply_api.step4_save") }}", data, function(d){
+                    var result = DANAL.AJAXCall("{{ url_for("apply_api.step4_save") }}", data, function(d){
                         alert(d["RETURNMSG"]);
                         if(d["RETURNCODE"] == 0 && btn == '다음'){
                             location.href="{{ url_for('apply_view.apply_step5', notice_no=data['r_notice_no']) }}";

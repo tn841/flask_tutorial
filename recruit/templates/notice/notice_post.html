@@ -19,7 +19,8 @@
         <div class="container">
             <div class="jumbotron">
                 <h1>{{ data[1] }}</h1>
-                시작일 : {{ datetime_func(data[2]) }} ~ 종료일 : {{ datetime_func(data[3]) }}
+                <p>시작일 : {{ datetime_func(data[2]) }} ~ 종료일 : {{ datetime_func(data[3]) }}</p>
+                <hr>
                 <p>{{ data[4] }}</p>
             </div>
             {% if data[7] == 'modify' %}
@@ -44,7 +45,7 @@
                     "sel1":"{{ data[5] }}",
                     "sel2":"{{ data[6] }}"
                 }
-                AJAXCall('{{ url_for('apply_api.create_resume') }}', data, function(r){
+                DANAL.AJAXCall('{{ url_for('apply_api.create_resume') }}', data, function(r){
 
                     if(r["RETURNCODE"] == 0){
                         location.href='{{ url_for('apply_view.apply_step1', sel1=data[5], sel2=data[6], notice_no=data[0]) }}';

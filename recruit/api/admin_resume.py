@@ -11,6 +11,16 @@ admin_resume_api=Blueprint("admin_resume_api", __name__)
 @admin_check
 def get_resume_list():
     param = request.values
+
+
+    escape_char = ["\'", "\"", ";", "="];
+    for key in request.values:
+        #print request.values[key]
+        for e_char in escape_char:
+            if e_char in request.values[key]:
+                print request.values[key]
+                raise Exception
+
     n_no = request.values['notice_no'] if 'notice_no' in request.values else ''
     search_val = request.values['search[value]'] if 'search[value]' in request.values else ''
     per_page = param.get('length')
@@ -22,7 +32,6 @@ def get_resume_list():
      
     #DB와 datatables libaray처리
     ##############################
-     
     cursor = dao.get_conn().cursor()
     sql_str="select * from resume"
     if n_no != '':
@@ -48,7 +57,7 @@ def get_resume_list():
         sql_str = sql_str + "  order by %s %s limit %s,%s" % (param.get('columns['+param.get('order[0][column]')+'][data]'), param.get('order[0][dir]'), param.get('start'), per_page)
     else:
         sql_str = sql_str + " and r_notice_no = %s order by %s %s limit %s,%s" % (n_no, param.get('columns['+param.get('order[0][column]')+'][data]'), param.get('order[0][dir]'), param.get('start'), per_page)
-    
+
     cursor.execute(sql_str)
     col_names=cursor.description
     result = cursor.fetchall()

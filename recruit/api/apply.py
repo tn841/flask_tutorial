@@ -3,11 +3,15 @@ from flask import jsonify, redirect
 from flask.blueprints import Blueprint
 from flask.globals import request, g
 from flask.helpers import url_for, flash
+from flask.templating import render_template
+from flask_cors.decorator import cross_origin
 from flask_login.utils import current_user, login_required
 
 from recruit_base import try_except, dao, appliable_check
 from mylogger import logger
 from datetime import datetime
+
+from recruit.recruit_base import dao
 
 apply_api = Blueprint("apply_api", __name__)
 
@@ -277,3 +281,25 @@ def apply_remove():
         data["RETURNMSG"] = "잘못된 접근입니다."
 
     return jsonify(data)
+
+
+@apply_api.route("/apply_doc", methods=["POST"])
+@login_required
+@try_except
+def apply_doc():
+    r_no = request.values['r_no'] if 'r_no' in request.values else ''
+
+    ####################################
+    cursor = dao.get_conn().cursor()
+    sql_str = "select * from recruit_notice join resume on resume.r_notice_no = recruit_notice.n_no  and r_no = %s" % (r_no)
+    print sql_str
+    cursor.execute(sql_str)
+    result = cursor.fetchone()
+    colnames=cursor.description
+    cursor.close()
+    ####################################
+
+    data={}
+    for idx in range(0, len(colnames)):
+        data[colnames[idx][0]]=result[idx]
+    return render_template("/apply/detail.html", data=data)

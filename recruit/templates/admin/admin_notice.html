@@ -80,7 +80,7 @@
 			}else if( $(this).text() == '삭제'){
 				var foo = confirm("삭제하시겠습니까?");
 				if(foo){
-					AJAXCall('{{ url_for('admin_notice_api.remove_notice') }}', {'n_no':n_no}, function(d){
+					DANAL.AJAXCall('{{ url_for('admin_notice_api.remove_notice') }}', {'n_no':n_no}, function(d){
 						if(d["RETURNCODE"]==0){
 							alert(d["RETURNMSG"]);
 							location.href="{{ url_for('admin_view.admin_notice', page=((cur_page/per_page)|int)+1) }}";

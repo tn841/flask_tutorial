@@ -1,10 +1,106 @@
-<!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+<style>
+    @page {
+        size: a4 portrait;
+        @frame header_frame {           /* Static Frame */
+            -pdf-frame-content: header_content;
+            -pdf-frame-border: 1;
+            left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+        }
+        @frame content_frame {          /* Content Frame */
+            -pdf-frame-border: 1;
+            left: 50pt; width: 512pt; top: 100pt; height: 650pt;
+        }
+        @frame footer_frame {           /* Another static Frame */
+            -pdf-frame-border: 1;
+            -pdf-frame-content: footer_content;
+            left: 50pt; width: 512pt; top: 760pt; height: 50pt;
+        }
+    }
+</style>
 </head>
-<body>
 
+<body>
+    <!-- Content for Static Frame 'header_frame' -->
+    <div id="header_content">Lyrics-R-Us</div>
+
+    <!-- Content for Static Frame 'footer_frame' -->
+    <div id="footer_content">
+        (c) - page <pdf:pagenumber>  of <pdf:pagecount>
+    </div>
+
+    <!-- HTML Content -->
+    To PDF or not to PDF
+<table class="table table-bordered table-hover" >
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>공고명</th>
+                <th>시작일</th>
+                <th>마감일</th>
+            </tr>
+            </thead>
+            <tbody>
+
+
+
+                    <tr>
+                        <td>22</td>
+                        <td><a href="/recruit/notice_view/22">다날 공채</a>
+                            <span class="badges" d_val="2017-12-28 00:00:00" s_val="2017-12-27 00:00:00"></span>
+                        </td>
+                        <td>2017-12-27</td>
+                        <td>2017-12-28</td>
+                    </tr>
+
+
+
+                    <tr>
+                        <td>21</td>
+                        <td><a href="/recruit/notice_view/21">[상시모집] 바리스타 상시 모집</a>
+                            <span class="badges" d_val="2018-12-31 00:00:00" s_val="2017-12-01 00:00:00"></span>
+                        </td>
+                        <td>2017-12-01</td>
+                        <td>2018-12-31</td>
+                    </tr>
+
+
+
+                    <tr>
+                        <td>20</td>
+                        <td><a href="/recruit/notice_view/20">채용공고 1</a>
+                            <span class="badges" d_val="2018-01-01 00:00:00" s_val="2017-12-01 00:00:00"></span>
+                        </td>
+                        <td>2017-12-01</td>
+                        <td>2018-01-01</td>
+                    </tr>
+
+
+
+                    <tr>
+                        <td>19</td>
+                        <td><a href="/recruit/notice_view/19">기획팀 팀원 공고</a>
+                            <span class="badges" d_val="2018-01-31 00:00:00" s_val="2017-12-31 00:00:00"></span>
+                        </td>
+                        <td>2017-12-31</td>
+                        <td>2018-01-31</td>
+                    </tr>
+
+
+
+                    <tr>
+                        <td>17</td>
+                        <td><a href="/recruit/notice_view/17">진행 예정 공고</a>
+                            <span class="badges" d_val="2019-12-20 00:00:00" s_val="2018-12-11 00:00:00"></span>
+                        </td>
+                        <td>2018-12-11</td>
+                        <td>2019-12-20</td>
+                    </tr>
+
+
+
+            </tbody>
+        </table>
 </body>
 </html>

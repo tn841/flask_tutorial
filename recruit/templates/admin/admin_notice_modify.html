@@ -86,7 +86,7 @@
 					"n_body"	:$("#n_body").val(),
 					"n_no" 		:$("#n_no").val()
 				}
-				AJAXCall("{{ url_for('admin_notice_api.modify_notice') }}", data, function(d){
+				DANAL.AJAXCall("{{ url_for('admin_notice_api.modify_notice') }}", data, function(d){
 					if(d["RETURNCODE"]==0){
 						alert(d["RETURNMSG"]);
 						location.href="{{ url_for('admin_view.admin_notice') }}";

@@ -6,40 +6,9 @@ from flask.templating import render_template
 from recruit_base import dao
 from flask_login.utils import current_user
 from datetime import datetime
-from xhtml2pdf import pisa
-from StringIO import StringIO
-from flask.helpers import make_response
+
 
 main_view = Blueprint("main_view", __name__)
-
-
-@main_view.route("/pdf_test")
-def pdf_test():
-    
-    source_html="<!DOCTYPE html><header><meta http-equiv='content-type' content='text/html; charset=utf-8'></header> <body style='boarder:2px'><h1 style='text-align:center'> 000 부문 지원 이력서 </h1> <hr> <h3>이력서 내용을 추가한다...</h3></body></html>"
-    output="test.pdf"
-    
-    #파일로 저장
-    result_file = open('./static/pdf/'+output, "w+b")
-    
-    #문자열로 저장
-    result_str = StringIO()
-    
-    #변환
-    #pisa_status = pisa.CreatePDF(source_html, dest=result_file)
-    pisa_status = pisa.CreatePDF(source_html, result_str, encoding='utf-8')
-    
-    print pisa_status
-    print result_str.getvalue()
-    
-    
-    #파일스트림 닫기
-    result_file.close()
-    
-    response = make_response(result_str.getvalue())
-    response.headers["Content-Type"] = 'application/pdf'
-
-    return response
 
 
 @main_view.route("/")

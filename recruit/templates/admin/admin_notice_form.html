@@ -82,7 +82,7 @@
 				}
 				
 				
-				AJAXCall("{{ url_for('admin_notice_api.create_notice') }}", data, function(d){
+				DANAL.AJAXCall("{{ url_for('admin_notice_api.create_notice') }}", data, function(d){
 					if(d["RETURNCODE"]==0){
 						alert(d["RETURNMSG"]);
 						location.href="{{ url_for('admin_view.admin_notice') }}";

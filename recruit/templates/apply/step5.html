@@ -22,7 +22,7 @@
                         	"submit_flag":"1",
                         	"notice_no" : {{ data["r_notice_no"] }}
                         }
-                        var result = AJAXCall("{{ url_for("apply_api.step5_save") }}", data, function(d){
+                        var result = DANAL.AJAXCall("{{ url_for("apply_api.step5_save") }}", data, function(d){
                         	if(d["RETURNCODE"]=='0'){
                         		alert(d["RETURNMSG"]);
                             	location.href="{{ url_for('mypage_view.mypage') }}";

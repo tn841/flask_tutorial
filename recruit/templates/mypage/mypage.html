@@ -73,7 +73,7 @@
                             "r_no":$(this).attr("r_no"),
                             "r_writer_no":"{{ current_user.user_no }}"
                         }
-                        AJAXCall('{{ url_for('apply_api.apply_remove') }}', data, function(r){
+                        DANAL.AJAXCall('{{ url_for('apply_api.apply_remove') }}', data, function(r){
                             if(r["RETURNCODE"] == 0){
                                 alert(r["RETURNMSG"]);
                                 location.reload();
@@ -89,7 +89,7 @@
                         	"submit_flag":"1",
                         	"notice_no" :$(this).attr("notice_no")
                         }
-                        var result = AJAXCall("{{ url_for("apply_api.step5_save") }}", data, function(d){
+                        var result = DANAL.AJAXCall("{{ url_for("apply_api.step5_save") }}", data, function(d){
                         	if(d["RETURNCODE"]=='0'){
                         		alert(d["RETURNMSG"]);
                             	location.href="{{ url_for('mypage_view.mypage') }}";

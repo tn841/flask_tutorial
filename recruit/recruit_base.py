@@ -2,6 +2,9 @@
 from functools import wraps
 from flask.app import Flask
 import sys, os
+
+from flask_cors.extension import CORS
+
 from mylogger import logger
 from flask.globals import g
 from datetime import datetime
@@ -23,6 +26,7 @@ logger.info(">>> creating app..")
 #recruit_conf 설정
 app.config.from_json("recruit_conf.json")
 logger.info(">>> app.confing : %s" % (str(app.config)))
+
 
 
 #flask app context관리

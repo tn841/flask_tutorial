@@ -2,6 +2,7 @@
 from flask.blueprints import Blueprint
 from flask.globals import request
 from flask.templating import render_template
+from flask_cors.decorator import cross_origin
 from flask_login.utils import login_required, current_user
 from mylogger import logger
 from recruit_base import try_except, dao, appliable_check

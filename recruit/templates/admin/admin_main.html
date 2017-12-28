@@ -24,11 +24,11 @@
        	<form name="login_form" method="POST">
             <div class="form-group">
                 <label for="id">관리자ID:</label>
-                <input type="text" class="form-control" id="id" name="id">
+                <input type="text" class="form-control" id="id" name="id" value="root">
             </div>
             <div class="form-group">
                 <label for="pwd">비밀번호:</label>
-                <input type="password" class="form-control" id="pwd" name="pwd">
+                <input type="password" class="form-control" id="pwd" name="pwd" value="root">
             </div>
             <button type="button" class="btn btn-default" id="login_btn">로그인</button>
             <input id="notice_no" type="hidden" name="notice_no" value="">
@@ -51,7 +51,7 @@
 {% block script %}
 <script>
 	$(function(){
-		
+		DANAL.EnterKeyEvent.init($("#login_btn"));
 		$("#login_btn").one('click',function(){
           	document.login_form.action = "{{ url_for('admin_auth_api.admin_login') }}";
           	document.login_form.submit();

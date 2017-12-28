@@ -62,7 +62,7 @@
 {% block script %}
     <script>
         $(function(){
-        	var n_type = getUrlVars()['n_type'];
+        	var n_type = DANAL.getURLVars()['n_type'];
         	
         	$.each($('#pagenation').children(), function(key,val){
         		var url = $(val).find('a').attr('href');

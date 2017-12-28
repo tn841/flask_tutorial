@@ -12,14 +12,14 @@
             <div class="form-row">
             <label for="name">이름:</label>
             <input type="text" class="form-control" id="name" name="name">
+            <span class="txt_alert" style="display: none;">이름을 입력하세요.</span><!--알럿-->
             </div>
 
 
             <div class="form-row">
-                <div class="form-group col-md-12">
-                    <label for="email">email</label>
-                    <input type="text" class="form-control" id="email" name="email">
-                </div>
+                <label for="email">email</label>
+                <input type="text" class="form-control" id="email" name="email">
+                <span class="txt_alert" style="display: none;">이메일 형식에 맞게 입력하세요.</span><!--알럿-->
                 <!-- <div class="form-group col-md-4">
                     <label for="check_btn">중복확인</label>
                     <button type="button" class="form-control" id="check_btn">중복확인</button>
@@ -29,22 +29,48 @@
             <div class="form-row">
             <label for="pwd">비밀번호:</label>
             <input type="password" class="form-control" id="pwd" name="pwd">
+            <span class="txt_alert" style="display: none;">영문, 숫자 포함 8~15자 사이로 입력하세요.</span><!--알럿-->
+            </div>
 
-
+            <div class="form-row">
             <label for="pwd_confirm">비밀번호 확인:</label>
             <input type="password" class="form-control" id="pwd_confirm">
+            <span class="txt_alert" style="display: none;">비밀번호가 일치하지 않습니다.</span><!--알럿-->
             </div>
             <br>
-            <button type="button" class="btn btn-primary" onclick="javascript:go_register();">가입</button>
+            <button type="button" class="btn btn-primary" id="register_btn">가입</button>
         </form>
     </div>
 {% endblock %}
 
 {% block script %}
     <script>
-        function go_register(){
-            document.register_form.action = "{{ url_for('register_api.register_action') }}";
-            document.register_form.submit();
-        }
+        $(function(){
+            DANAL.EnterKeyEvent.init($("#register_btn"));
+            var elems = [$("#name"), $("#email"), $("#pwd"), $("#pwd_confirm")];
+
+
+
+            DANAL.recruit.ClickUIEvent.register.init();
+            $("#register_btn").on("click", function(){
+
+                var patterns = ["EMPTY", "EMAIL", "PASSWORD", "PWD_CONFIRM"];
+                var flag = true;
+
+                $.each(elems, function(key, val){
+                    if(val.attr('id')=="pwd_confirm"){
+                        flag = flag && DANAL.checkForm(val, val.next(), patterns[key], $("#pwd"));
+                    }else {
+                        flag = flag && DANAL.checkForm(val, val.next(), patterns[key]);
+                    }
+                });
+
+                if(flag){
+                    document.register_form.action = "{{ url_for('register_api.register_action') }}";
+                    document.register_form.submit();
+                }
+
+            });
+        });
     </script>
 {% endblock %}

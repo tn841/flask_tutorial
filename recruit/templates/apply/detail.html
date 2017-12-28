@@ -1,0 +1,70 @@
+<button class="btn btn-primary float-right">출력</button>
+<table class="table table-bordered" >
+    <thead>
+        <tr>
+            <th colspan="4" style="text-align: center">'{{ data['n_title'] }}'부문 지원서</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>지원분야:</td>
+            <td>{{ data['n_sel1'] }}</td>
+            <td>지원직무:</td>
+            <td>{{ data['n_sel2'] }}</td>
+        </tr>
+        <tr>
+            <td>이름:</td>
+            <td>{{ data['r_name'] }}</td>
+            <td>성별:</td>
+            <td>{{ data['r_gender'] }}</td>
+        </tr>
+        <tr>
+            <td colspan="2">생년월일:</td>
+            <td colspan="2">{{ data['r_birth'] }}</td>
+        </tr>
+        <tr>
+            <td>주소:</td>
+            <td>{{ data['r_addr'] }}</td>
+            <td>연락처:</td>
+            <td>{{ data['r_phone'] }}</td>
+        </tr>
+        <tr>
+            <td>학력:</td>
+            <td>{{ data['r_school_type'] }}</td>
+            <td>학교:</td>
+            <td>{{ data['r_school_name'] }}</td>
+        </tr>
+        <tr>
+            <td>전공:</td>
+            <td>{{ data['r_major'] }}</td>
+            <td>학점:</td>
+            <td>{{ data['r_grade'] }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <th colspan="4">자기소개 1</th>
+        </tr>
+        <tr>
+            <td colspan="4">{{ data['r_selfintro1'] }}</td>
+        </tr>
+        <tr>
+            <th colspan="4">자기소개 2</th>
+        </tr>
+        <tr>
+            <td colspan="4">{{ data['r_selfintro2'] }}</td>
+        </tr>
+        <tr>
+            <th colspan="4">자기소개 3</th>
+        </tr>
+        <tr>
+            <td colspan="4">{{ data['r_selfintro3'] }}</td>
+        </tr>
+    </tbody>
+    <p>최종 지원 여부 : {{ data['r_submit'] }}</p>
+    <p>최종 지원 시간 : {{ data['r_submit_time'] }}</p>
+</table>
