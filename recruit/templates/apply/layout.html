@@ -1,6 +1,11 @@
 {% extends 'layout.html' %}
 {% block title %}지원{% endblock %}
 {% block head %}{{ super() }}{% endblock %}
+
+{% block leftmenu %}
+남은 시간<br><span id="timer"></span>  <a href="javascript:reload();">연장</a>
+{% endblock %}
+
 {% block contents %}
     <div class="container">
         <hr>
@@ -37,5 +42,31 @@
 {% endblock %}
 
 {% block script %}
+<script>
+    var sec = 600;
 
+    setInterval(function () {
+         if(sec === 0){
+            location.reload();
+        }
+        var min = Math.floor(sec/60);
+        var r_sec = Math.floor(sec%60);
+        if(r_sec+''.length < 2){
+            r_sec = '0'+r_sec;
+        }
+        $('#timer').text(min+"분 "+r_sec+"초");
+        sec -= 1;
+    }, 1000)
+
+    function reload(){
+        sec=600;
+        $.ajax({
+            url:'{{ url_for("main_view.session_expire_check") }}',
+            method:"POST",
+            success:function(d){
+                console.log(d);
+            }
+        });
+    }
+</script>
 {% endblock %}

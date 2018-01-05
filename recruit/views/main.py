@@ -1,6 +1,7 @@
 #-*- coding:utf-8 -*-
 from flask.blueprints import Blueprint
-from flask.globals import current_app, g
+from flask.globals import current_app, g, session
+from flask.json import jsonify
 from flask.templating import render_template
 
 from recruit_base import dao
@@ -13,13 +14,12 @@ main_view = Blueprint("main_view", __name__)
 
 @main_view.route("/")
 def index():
-
-    # from aes_cipher import decrypt
-    # aes_cipher = "dalcoin1@3$5^7*9"
-    # decrypted_number = decrypt(aes_cipher, "b/pGR+ybw8WJDdi2m5msgA==")
-
     return render_template("/index.html")
 
+@main_view.route("/sessoin_check", methods=["POST"])
+def session_expire_check():
+    print session.clear
+    return jsonify({'data':'ok'})
 
 @main_view.route("/talent")
 def right_people():

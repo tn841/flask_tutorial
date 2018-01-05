@@ -15,15 +15,11 @@ from flask_login.login_manager import LoginManager
 from recruit_base import app, try_except, admin_check
 from mylogger import logger
 
+from recruit.api.auth import login_manager
 
 admin_auth_api=Blueprint("admin_auth_api", __name__)
 
-#Flask-Loing 모듈
-login_manager = LoginManager()
-login_manager.init_app(app)
 
-login_manager.login_view = 'admin_view.admin_login'
-login_manager.login_message = "관리자 로그인이 필요합니다."
 
 @login_manager.user_loader
 @try_except

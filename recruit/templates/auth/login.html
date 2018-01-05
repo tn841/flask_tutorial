@@ -18,13 +18,17 @@
         <form name="login_form" method="POST">
             <div class="form-group">
                 <label for="email">이메일:</label>
-                <input type="email" class="form-control" id="email" name="email">
+                <input type="email" class="form-control" id="email" name="email" value="{{ email }}">
                 <span class="txt_alert" style="display: none;">이메일 형식에 맞게 입력하세요.</span><!--알럿-->
             </div>
             <div class="form-group">
                 <label for="pwd">비밀번호:</label>
                 <input type="password" class="form-control" id="pwd" name="pwd">
                 <span class="txt_alert" style="display: none;">비밀번호를 입력하세요.</span><!--알럿-->
+            </div>
+            <div class="form-group">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1" id="rmb" name="rmb" {{'checked' if email != '' else ''}}>
+                <label class="form-check-label" for="exampleCheck1" >이메일 기억하기</label>
             </div>
             <button type="button" class="btn btn-default" id="login_btn">로그인</button>
             <button type="button" class="btn btn-default" id="register_btn">회원가입</button>

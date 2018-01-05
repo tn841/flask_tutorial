@@ -3,15 +3,13 @@ from functools import wraps
 from flask.app import Flask
 import sys, os
 
-from flask_cors.extension import CORS
-
 from mylogger import logger
-from flask.globals import g
-from datetime import datetime
+from flask.globals import g, request
+from datetime import datetime, timedelta
 from flask_login.utils import current_user
 from werkzeug import redirect
 from flask.helpers import url_for, flash
-from Tkconstants import CURRENT
+from flask_session import Session
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -28,14 +26,27 @@ app.config.from_json("recruit_conf.json")
 logger.info(">>> app.confing : %s" % (str(app.config)))
 
 
-
-#flask app context관리
+'''flask app context관리'''
+#http 요청 끝날때 DB connection 닫기
 @app.teardown_request
 def db_close(e):
     if hasattr(g,"conn"):   #db_conntion이 있을 때만 close한다.
         #g.conn.commit()
         g.conn.close()
         logger.info( ">> db connection close - %s" % (g.conn))
+
+
+
+#session 관련
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://'+app.config['DB_USER']+':'+app.config['DB_PASSWD']+'@'+app.config['DB_HOST']+'/'+app.config['DB_SCHEMA']+'?charset=utf8'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+#app.config['SQLALCHEMY_ECHO'] = True
+session = Session(app)      #flask_session의 Session객체를 이용하여 session 관리
+                            #cofing.json에서 "SESSION_TYPE"을 "SQLALCHEMY"로 설정하였음.
+
+app.permanent_session_lifetime = timedelta(minutes=10)
+
+
 
 
 
@@ -67,6 +78,7 @@ def admin_check(f):
 
 #전역 함수
 def appliable_check(notice_no):
+    #지원서 수정이 가능한 날짜인지 체크하는 함수
     ###################
     cursor = dao.get_conn().cursor()
     query_str="select n_s_date, n_e_date from recruit_notice where n_no = %s" % (notice_no)

@@ -4,14 +4,11 @@ from flask.blueprints import Blueprint
 from flask.globals import request, g
 from flask.helpers import url_for, flash
 from flask.templating import render_template
-from flask_cors.decorator import cross_origin
 from flask_login.utils import current_user, login_required
 
 from recruit_base import try_except, dao, appliable_check
 from mylogger import logger
 from datetime import datetime
-
-from recruit.recruit_base import dao
 
 apply_api = Blueprint("apply_api", __name__)
 

@@ -40,6 +40,7 @@
             </div>
         </div>
     </div>
+    <br>
 </div>
 
 <div class="division"></div>
@@ -63,13 +64,16 @@
             <li><a href="{{ url_for('main_view.recruit_pool') }}">인재풀</a></li>
             <hr>
         </ul>
+
         {% block leftmenu %}{% endblock %}
     </div>
     <div class="col-sm-9">
         {% block contents %}{% endblock %}
     </div>
     <div class="col-sm-1">
-        {% block rightmenu %}{% endblock %}
+        {% block rightmenu %}
+
+        {% endblock %}
     </div>
 </div>
 
